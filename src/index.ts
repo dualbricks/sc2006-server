@@ -1,7 +1,10 @@
 import { type } from "os";
 import app from "./app";
 import { CarParkList } from "./interfaces/carpark";
-import { updateCarParkAvailbility } from "./util/carpark-info";
+import { updateCarParkAvailbility, updateCarParkAvailbilityLTA } from "./util/carpark-info";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const port = process.env.PORT || 3000;
 
@@ -10,11 +13,7 @@ app.listen(port, ()=>{
 })
 
 const test = async () : Promise<void> => {
-    const data : CarParkList|string = await updateCarParkAvailbility("2022-08-18T06:25:54");
-    if(typeof data === "string") return;
-    else console.log(data.items[0].carpark_data[1]); 
-    
+    await updateCarParkAvailbilityLTA();
 }
-
 test();
 
