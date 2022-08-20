@@ -1,10 +1,6 @@
-import { type } from "os";
 import app from "./app";
-import { CarParkList } from "./interfaces/carpark";
-import { updateCarParkAvailbility, updateCarParkAvailbilityLTA } from "./util/carpark-info";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
+import 'dotenv/config';
 
 const port = process.env.PORT || 3000;
 

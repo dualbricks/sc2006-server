@@ -4,9 +4,9 @@ import { carParkInfoLTA, carParkListLTA } from '../interfaces';
 
 // API call for carpark availability from Datamall LTA
 const updateCarParkAvailbilityLTA = async (query?:string)  => {
-    const queryList: string[] = ["500","1000","1500","2000"];
+    const queryList: number[] = [0,500,1000,1500,2000];
     let config: AxiosRequestHeaders = {
-        Accept: 'application/json',
+        accept: 'application/json',
         AccountKey: process.env.API_KEY
     }
     let carParkList : carParkListLTA = {value: []};
@@ -14,19 +14,17 @@ const updateCarParkAvailbilityLTA = async (query?:string)  => {
     if(query === undefined) {
         
         try {
+            //Running API calls in parallel
             const responses = await Promise.all(
                 queryList.map(async query =>{
                     let url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${query}`
-                    const {data, status} = await axios.get(url, config);
-                    if(status === 200) carParkList.value.push(data);
+                    const {data, status} = await axios.get(url, {headers: config});
+                    if(status === 200) carParkList.value.push(data.value);
                 })
             )
         }catch(e) {
             console.log(e);
-            console.log('gg')
-            
         }
-        console.log(carParkList);
     }
 }
 //  real time update of carpark availbility
@@ -47,9 +45,7 @@ const updateCarParkAvailbility = async (time: string): Promise<CarParkList | str
 
 }
 
-const getHDBCarParkData = async () => {
-    // to be added
-}
+
 
 
 export {
