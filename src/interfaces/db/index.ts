@@ -1,10 +1,9 @@
-import { CarPark } from "../carpark";
-import { IUser, token, IUserMethods} from "./user";
+import { carParkInfo } from "./carParkInfo";
+import { IUser, IUserMethods} from "./user";
 
 
 export {
-    CarPark,
+    carParkInfo,
     IUser,
-    token,
     IUserMethods
 }

@@ -1,8 +1,8 @@
-import mongoose, {Schema, model} from "mongoose";
+import mongoose, {Schema, model, Types} from "mongoose";
 import validator from 'validator';
-import { carParkInfoLTA } from "../../interfaces/index";
+import { carParkInfo } from "../../interfaces/db/index";
 
-const carListSchema : Schema<carParkInfoLTA> = new mongoose.Schema<carParkInfoLTA>({
+const carListSchema : Schema<carParkInfo> = new mongoose.Schema<carParkInfo>({
     CarParkID: {
         type: String,
         required:true,
@@ -18,6 +18,7 @@ const carListSchema : Schema<carParkInfoLTA> = new mongoose.Schema<carParkInfoLT
     },
     Location: {
         type: String,
+        coordinates: Types.Array<Number>,
         required:true
     },
     AvailableLots: {
@@ -35,3 +36,7 @@ const carListSchema : Schema<carParkInfoLTA> = new mongoose.Schema<carParkInfoLT
 }, {
     timestamps: true
 })
+
+const CarPark = mongoose.model("CarPark", carListSchema)
+
+export {CarPark}

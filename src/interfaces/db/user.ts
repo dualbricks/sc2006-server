@@ -3,7 +3,7 @@ import { UserModel } from "../../db/models/user";
 export interface IUser {
     email: string,
     password: string,
-    tokens: Types.Array<Object>,
+    tokens: Types.Array<String>,
     savedList?: Types.Array<string>,
     avatar?: Buffer
 }

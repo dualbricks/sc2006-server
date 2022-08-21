@@ -1,9 +1,8 @@
 import axios,{AxiosRequestHeaders} from 'axios';
-import { CarParkList } from '../interfaces/carpark';
 import { carParkInfoLTA, carParkListLTA } from '../interfaces';
 
 // API call for carpark availability from Datamall LTA
-const updateCarParkAvailbilityLTA = async (query?:string)  => {
+const updateCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
     const queryList: number[] = [0,500,1000,1500,2000];
     let config: AxiosRequestHeaders = {
         accept: 'application/json',
@@ -15,20 +14,44 @@ const updateCarParkAvailbilityLTA = async (query?:string)  => {
         
         try {
             //Running API calls in parallel
-            const responses = await Promise.all(
+            await Promise.all(
                 queryList.map(async query =>{
-                    let url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${query}`
-                    const {data, status} = await axios.get(url, {headers: config});
-                    if(status === 200) carParkList.value.push(data.value);
+                    const data = await getCarParkInfo(query,config);
+                    if(data) carParkList.value.push(data);
                 })
             )
         }catch(e) {
             console.log(e);
         }
+
     }
 }
-//  real time update of carpark availbility
-const updateCarParkAvailbility = async (time: string): Promise<CarParkList | string> => {
+const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promise<carParkInfoLTA| void> => {
+    let url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${query}`
+    try{
+        const {data, status} = await axios.get(url, {headers: config});
+        if(status === 200) return data.value;
+
+    }catch(e) {
+        console.log(e)
+    }
+    return
+}
+const pushCarParkInfo = async(data: carParkListLTA) : Promise<void>=> {
+    data.value.forEach(carpark => {
+        
+        
+    });
+
+}
+
+const convertStringToGeolocation = async(s: string) => {
+    
+
+
+}
+//  real time update of carpark availbility (placeholder)
+/* const updateCarParkAvailbility = async (time: string): Promise<CarParkList | string> => {
     let url =`https://api.data.gov.sg/v1/transport/carpark-availability?date_time=${encodeURIComponent(time)}`;
     let config : AxiosRequestHeaders  = {
         accept: 'application/json',
@@ -43,13 +66,13 @@ const updateCarParkAvailbility = async (time: string): Promise<CarParkList | str
         return "error"
     };
 
-}
+} */
 
 
 
 
 export {
-    updateCarParkAvailbility,
+    //updateCarParkAvailbility,
     updateCarParkAvailbilityLTA
 }
 

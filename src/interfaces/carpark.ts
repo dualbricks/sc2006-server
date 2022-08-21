@@ -1,4 +1,4 @@
-export interface CarParkList {
+/* export interface CarParkList {
     api_info: {
         status: string
     },
@@ -15,3 +15,4 @@ export interface CarParkInfo {
     lot_type: string,
     lots_available: string
 }
+ */

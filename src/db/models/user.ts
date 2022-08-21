@@ -1,4 +1,4 @@
-import mongoose, {Schema, model, Model, HydratedDocument} from "mongoose";
+import mongoose, {Schema, model, Model, HydratedDocument, Types} from "mongoose";
 import validator from 'validator';
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken' ; 
@@ -29,12 +29,8 @@ const userSchema : Schema<IUser, UserStaticModel, IUserMethods> = new Schema<IUs
                 throw new Error('Password should not contain "password"')
             }
         }},
-    tokens: [{
-        type: String
-    }],
-    savedList: [{
-        type: String
-    }],
+    tokens: [String],
+    savedList: [String],
     avatar: {
         type: Buffer
     }
@@ -45,7 +41,7 @@ const userSchema : Schema<IUser, UserStaticModel, IUserMethods> = new Schema<IUs
 userSchema.method('generateAuthToken', async function generateAuthToken(){
     const user : HydratedDocument<IUser,IUserMethods> = this;
     const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SERCRET)
-    user.tokens = user.tokens.concat({token})
+    user.tokens.push(token)
     await user.save()
     return token
 })
