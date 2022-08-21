@@ -5,7 +5,7 @@ export interface geoLocation {
     long: number
 }
 export interface carParkInfo extends carParkInfoLTA {
-    location: {
+    Location: {
         type: "Point";
         coordinates: Types.Array<number>
     }

@@ -1,7 +1,7 @@
 import app from "./app";
-import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
+import {insertCarParkAvailbilityLTA, updateCarParkAvailbilityLTA } from "./util/carpark-info";
 import 'dotenv/config';
-
+import './db/mongoose'
 const port = process.env.PORT || 3000;
 
 app.listen(port, ()=>{
@@ -9,7 +9,7 @@ app.listen(port, ()=>{
 })
 
 const test = async () : Promise<void> => {
-    await updateCarParkAvailbilityLTA();
+    await updateCarParkAvailbilityLTA()
+    console.log("done")
 }
-test();
-
+test()

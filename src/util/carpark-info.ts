@@ -1,8 +1,20 @@
 import axios,{AxiosRequestHeaders} from 'axios';
-import { carParkInfoLTA, carParkListLTA } from '../interfaces';
+import { Types } from 'mongoose';
+import { carParkInfoLTA, carParkListLTA, dbGeolocationType } from '../interfaces';
+import { CarPark } from '../db/models/car';
 
-// API call for carpark availability from Datamall LTA
-const updateCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
+//Function to update Carpark Availbility
+const updateCarParkAvailbilityLTA = async(): Promise<void> => {
+    try{
+        await CarPark.deleteMany({});
+        await insertCarParkAvailbilityLTA();
+    }catch(e) {
+        console.log(e)
+    }
+}
+
+// Inserting CarParks into db(run one time only)
+const insertCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
     const queryList: number[] = [0,500,1000,1500,2000];
     let config: AxiosRequestHeaders = {
         accept: 'application/json',
@@ -17,16 +29,18 @@ const updateCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
             await Promise.all(
                 queryList.map(async query =>{
                     const data = await getCarParkInfo(query,config);
-                    if(data) carParkList.value.push(data);
+                    if(data) carParkList.value.push(...data);
                 })
             )
+            await pushCarParkInfo(carParkList);
+
         }catch(e) {
             console.log(e);
         }
 
     }
 }
-const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promise<carParkInfoLTA| void> => {
+const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promise<carParkInfoLTA[]| void> => {
     let url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${query}`
     try{
         const {data, status} = await axios.get(url, {headers: config});
@@ -39,16 +53,26 @@ const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promi
 }
 const pushCarParkInfo = async(data: carParkListLTA) : Promise<void>=> {
     data.value.forEach(carpark => {
-        
-        
+        if(typeof carpark.Location === 'string') {
+            let coordinates: number[] = convertStringToGeolocation(carpark.Location)
+            carpark.Location = {
+                type: 'Point',
+                coordinates: coordinates
+            }
+        }
     });
 
+    try {
+        console.log(data.value)
+        await CarPark.insertMany(data.value);
+    }catch(e) {
+        console.log(e)
+    }
 }
 
-const convertStringToGeolocation = async(s: string) => {
-    
-
-
+const convertStringToGeolocation = (s: string) : number[] => {
+    var str_split :  number[] = s.split(" ").map(Number)
+    return str_split.reverse()
 }
 //  real time update of carpark availbility (placeholder)
 /* const updateCarParkAvailbility = async (time: string): Promise<CarParkList | string> => {
@@ -73,6 +97,7 @@ const convertStringToGeolocation = async(s: string) => {
 
 export {
     //updateCarParkAvailbility,
+    insertCarParkAvailbilityLTA,
     updateCarParkAvailbilityLTA
 }
 

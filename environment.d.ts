@@ -6,7 +6,7 @@ declare global {
         PORT?: string;
         PWD: string;
         JWT_SERCRET: string;
-        MONGODB_URL: string;
+        MONGODB_PW: string;
       }
     }
   }

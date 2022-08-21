@@ -6,20 +6,19 @@ const carListSchema : Schema<carParkInfo> = new mongoose.Schema<carParkInfo>({
     CarParkID: {
         type: String,
         required:true,
-        unique: true,
     },
     Area: {
-        type: String,
-        required:true
+        type: String
     },
     Development: {
         type: String,
         required:true
     },
     Location: {
-        type: String,
-        coordinates: Types.Array<Number>,
-        required:true
+        type: Object,
+        coordinates: [Number],
+        required:true,
+        index: "2dsphere"
     },
     AvailableLots: {
         type: Number,
