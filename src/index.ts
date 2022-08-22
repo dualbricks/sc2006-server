@@ -10,6 +10,10 @@ app.listen(port, ()=>{
 
 const test = async () : Promise<void> => {
     await updateCarParkAvailbilityLTA()
-    console.log("done")
+    setInterval(async()=>{
+        await updateCarParkAvailbilityLTA()
+        console.log("done")
+    }, 1000*60)
+
 }
 test()

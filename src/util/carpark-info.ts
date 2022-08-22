@@ -6,7 +6,8 @@ import { CarPark } from '../db/models/car';
 //Function to update Carpark Availbility
 const updateCarParkAvailbilityLTA = async(): Promise<void> => {
     try{
-        await CarPark.deleteMany({});
+        await CarPark.collection.drop()
+        await CarPark.ensureIndexes();
         await insertCarParkAvailbilityLTA();
     }catch(e) {
         console.log(e)
@@ -40,6 +41,7 @@ const insertCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
 
     }
 }
+// API call to get data from LTA
 const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promise<carParkInfoLTA[]| void> => {
     let url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${query}`
     try{
