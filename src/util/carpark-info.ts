@@ -1,21 +1,29 @@
 import axios,{AxiosRequestHeaders} from 'axios';
 import { Types } from 'mongoose';
-import { carParkInfoLTA, carParkListLTA, dbGeolocationType } from '../interfaces';
+import { carParkInfoLTA, carParkListLTA, dbGeolocationType, carParkObject, lotType } from '../interfaces';
 import { CarPark } from '../db/models/car';
+import { LookupOptions } from 'dns';
 
 //Function to update Carpark Availbility
 const updateCarParkAvailbilityLTA = async(): Promise<void> => {
     try{
-        await CarPark.collection.drop()
-        await CarPark.ensureIndexes();
-        await insertCarParkAvailbilityLTA();
+        const data : void | carParkInfoLTA[] = await getCarParkAvailbilityLTA();
+        const start = Date.now()
+        if(data) {
+            await CarPark.collection.drop()
+            await CarPark.ensureIndexes();
+            await CarPark.insertMany(data);
+        }
+        const end = Date.now()-start
+        console.log(`time taken for DB operation: ${end} milliseconds`)
+
     }catch(e) {
         console.log(e)
     }
 }
 
 // Inserting CarParks into db(run one time only)
-const insertCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
+const getCarParkAvailbilityLTA = async (query?:string): Promise<void|carParkInfoLTA[]> => {
     const queryList: number[] = [0,500,1000,1500,2000];
     let config: AxiosRequestHeaders = {
         accept: 'application/json',
@@ -33,7 +41,8 @@ const insertCarParkAvailbilityLTA = async (query?:string): Promise<void> => {
                     if(data) carParkList.value.push(...data);
                 })
             )
-            await pushCarParkInfo(carParkList);
+            const data : carParkInfoLTA[] | void = await pushCarParkInfo(carParkList);
+            if(data) return  data
 
         }catch(e) {
             console.log(e);
@@ -53,20 +62,10 @@ const getCarParkInfo = async (query:number, config: AxiosRequestHeaders) : Promi
     }
     return
 }
-const pushCarParkInfo = async(data: carParkListLTA) : Promise<void>=> {
-    data.value.forEach(carpark => {
-        if(typeof carpark.Location === 'string') {
-            let coordinates: number[] = convertStringToGeolocation(carpark.Location)
-            carpark.Location = {
-                type: 'Point',
-                coordinates: coordinates
-            }
-        }
-    });
-
+const pushCarParkInfo = async(data: carParkListLTA) : Promise<void | carParkInfoLTA[]>=> {
     try {
-        console.log(data.value)
-        await CarPark.insertMany(data.value);
+        let newData : carParkInfoLTA[] = mergeCarParkInfo(data.value)
+        return newData
     }catch(e) {
         console.log(e)
     }
@@ -75,6 +74,47 @@ const pushCarParkInfo = async(data: carParkListLTA) : Promise<void>=> {
 const convertStringToGeolocation = (s: string) : number[] => {
     var str_split :  number[] = s.split(" ").map(Number)
     return str_split.reverse()
+}
+const mergeCarParkInfo = (data: carParkInfoLTA[]) : carParkInfoLTA[] =>{
+    type lot = lotType[]
+    //data.sort((a,b)=>compareString(a,b));
+    let carParkObj : carParkObject = {}
+    const start = Date.now();
+    data.forEach((carPark: carParkInfoLTA)=>{
+        if(carParkObj[carPark.CarParkID]) {
+            let lotArr: lot = carParkObj[carPark.CarParkID].AvailableLots as lot
+            lotArr.push({lotType:carPark.LotType, AvailableLots: carPark.AvailableLots as number})
+            carParkObj[carPark.CarParkID].AvailableLots = lotArr;
+        }
+        else {
+            carParkObj[carPark.CarParkID] = {...carPark};
+            carParkObj[carPark.CarParkID].AvailableLots = <lot> [{ lotType: carPark.LotType, AvailableLots: carPark.AvailableLots}]
+            if(typeof carPark.Location === 'string') {
+                let coordinates: number[] = convertStringToGeolocation(carPark.Location)
+                carParkObj[carPark.CarParkID].Location = {
+                    type: 'Point',
+                    coordinates: coordinates
+                }
+            }
+        }
+    })
+    const end = Date.now() - start
+    console.log(`Time taken for merging: ${end} milliseconds`)
+    const newData : carParkInfoLTA[] = Object.values(carParkObj);
+    return newData
+}
+
+const compareString = (a:carParkInfoLTA,b:carParkInfoLTA) => {
+    let fa = a.CarParkID.toLowerCase(),
+    fb = b.CarParkID.toLowerCase();
+
+    if (fa < fb) {
+        return -1;
+    }
+    if (fa > fb) {
+        return 1;
+    }
+    return 0;
 }
 //  real time update of carpark availbility (placeholder)
 /* const updateCarParkAvailbility = async (time: string): Promise<CarParkList | string> => {
@@ -99,7 +139,7 @@ const convertStringToGeolocation = (s: string) : number[] => {
 
 export {
     //updateCarParkAvailbility,
-    insertCarParkAvailbilityLTA,
+    getCarParkAvailbilityLTA,
     updateCarParkAvailbilityLTA
 }
 

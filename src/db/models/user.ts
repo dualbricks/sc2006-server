@@ -37,7 +37,9 @@ const userSchema : Schema<IUser, UserStaticModel, IUserMethods> = new Schema<IUs
 }, {
     timestamps:true
 })
+// User methods 
 
+// method for generating auth tokens for a user 
 userSchema.method('generateAuthToken', async function generateAuthToken(){
     const user : HydratedDocument<IUser,IUserMethods> = this;
     const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SERCRET)

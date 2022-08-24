@@ -21,7 +21,7 @@ const carListSchema : Schema<carParkInfo> = new mongoose.Schema<carParkInfo>({
         index: "2dsphere"
     },
     AvailableLots: {
-        type: Number,
+        type: [Object],
         required:true
     },
     LotType: {

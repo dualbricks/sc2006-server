@@ -9,7 +9,7 @@ export interface carParkInfoLTA {
     Area: string,
     Development: string,
     Location: string | dbGeolocationType,
-    AvailableLots: number,
+    AvailableLots: lotType[] | number,
     LotType: string,
     Agency: string
 }
@@ -17,4 +17,12 @@ export interface carParkInfoLTA {
 export interface dbGeolocationType {
     type: "Point",
     coordinates: number[]
+}
+export interface lotType {
+    lotType: string,
+    AvailableLots: number
+}
+
+export interface carParkObject {
+    [key:string] : carParkInfoLTA
 }

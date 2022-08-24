@@ -1,7 +1,7 @@
-import { carParkInfoLTA, carParkListLTA,dbGeolocationType } from "./carParkLta";
+import { carParkInfoLTA, carParkListLTA,dbGeolocationType, carParkObject, lotType } from "./carParkLta";
 import { IUser } from "./db/user";
 
 
 
 
-export {carParkInfoLTA, carParkListLTA, dbGeolocationType};
+export {carParkInfoLTA, carParkListLTA, dbGeolocationType, carParkObject, lotType};
