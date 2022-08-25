@@ -5,6 +5,7 @@
 1. Start by cloning this repository to your local machine
 1. If you opening this repository for the first time, run ```npm i```
 1. Make a copy of ```.env``` file in your local repository.
+1. Compile typescript to js using ```npx tsc```
 1. Run app
   - Development mode: ```npm run dev```
   
