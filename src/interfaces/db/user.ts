@@ -1,17 +1,21 @@
 import { HydratedDocument, Types, Model} from "mongoose";
-import { UserModel } from "../../db/models/user";
+
+interface token {
+    token: string;
+}
 export interface IUser {
     email: string,
     password: string,
-    tokens: Types.Array<String>,
-    savedList?: Types.Array<string>,
+    tokens: token[],
+    savedList?: String[],
     avatar?: Buffer
 }
 
 export interface IUserMethods {
-    generateAuthToken(): string,
-    toJSON(): HydratedDocument<IUser,IUserMethods>;
+    generateAuthToken(): Promise<string>,
+    toJSON(): Object;
 }
-export interface UserStaticModel extends UserModel {
+
+export interface UserModel extends Model<IUser, {}, IUserMethods> {
     findByCredentials(email:string, password:string): Promise<HydratedDocument<IUser,IUserMethods>>
 }

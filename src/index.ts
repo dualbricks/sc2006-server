@@ -2,9 +2,10 @@ import app from "./app";
 import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
 import 'dotenv/config';
 import './db/mongoose'
-import { router } from "./routers/carPark";
+
+
 const port = process.env.PORT || 3000;
-app.use(router)
+
 app.listen(port, ()=>{
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 })
