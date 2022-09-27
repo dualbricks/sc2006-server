@@ -7,7 +7,8 @@ declare global {
         PWD: string;
         JWT_SECRET: string;
         MONGODB_PW: string;
-        MAP_API_KEY: string;
+        MAP_EMAIL: string;
+        MAP_PASSWORD: string;
       }
     }
   }

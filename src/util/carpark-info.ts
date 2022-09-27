@@ -2,7 +2,6 @@ import axios,{AxiosRequestHeaders} from 'axios';
 import { Types } from 'mongoose';
 import { carParkInfoLTA, carParkListLTA, dbGeolocationType, carParkObject, lotType } from '../interfaces';
 import { CarPark } from '../db/models/car';
-import { LookupOptions } from 'dns';
 
 //Function to update Carpark Availbility
 const updateCarParkAvailbilityLTA = async(): Promise<void> => {

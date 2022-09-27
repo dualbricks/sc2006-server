@@ -11,3 +11,14 @@ const getGeolocation = async (query:string): Promise<geoLocation|void> =>{
     console.log(data);
 }
 
+export const getAPIKey = async(email: String, password: String): Promise<String| void> => {
+
+    let config : AxiosRequestHeaders = {
+        Accept: 'application/json',
+        'cache-control': 'no-cache, max-age=0',
+    }
+    let url = `https://developers.onemap.sg/privateapi/auth/post/getToken`
+    const {data, status} = await axios.post(url, {Headers: config, email: email, password:password});
+    const APIKey = data.access_token;
+    return APIKey;
+}

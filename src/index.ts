@@ -2,6 +2,7 @@ import app from "./app";
 import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
 import 'dotenv/config';
 import './db/mongoose'
+import { uploadTrafficImages } from "./controllers/trafficImageController";
 
 
 const port = process.env.PORT || 3000;
@@ -25,3 +26,5 @@ const test = async () : Promise<void> => {
 
 }
 test()
+
+uploadTrafficImages()
