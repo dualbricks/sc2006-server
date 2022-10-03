@@ -6,3 +6,13 @@ export const fetchNearByCarParks = async (latt : number, long: number )=> {
     const data = await CarPark.find({Location: {$nearSphere: {$geometry: {type: "Point",coordinates:[long, latt]}, $maxDistance:2000}}})
     return data
 }
+
+export const fetchCarParks = async() =>{
+    try {
+        const data = await CarPark.find();
+        return data;
+    }catch(e) {
+        console.log('Error');
+    }
+
+}
