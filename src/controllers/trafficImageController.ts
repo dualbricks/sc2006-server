@@ -51,15 +51,21 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
     let config : AxiosRequestHeaders = {
         Accept: 'application/json'
     }
-    let token  = await getAPIKey(process.env.MAP_EMAIL, process.env.MAP_PASSWORD) as string;
+    try {
+        let token  = await getAPIKey(process.env.MAP_EMAIL, process.env.MAP_PASSWORD) as string;
 
 
-    let newList =  await Promise.all(trafficData.map(async (image: TraffiImage)=> {
-        const x = await gettingNameAPICall(image, token);
-        return x;
-    }))
-    console.log(newList.length)
-    return newList;
+        let newList =  await Promise.all(trafficData.map(async (image: TraffiImage)=> {
+            const x = await gettingNameAPICall(image, token);
+            return x;
+        }))
+        console.log(newList.length)
+        return newList;
+
+    }catch(e) {
+        console.log('no key');
+    }
+ 
 }
 
 const gettingNameAPICall = async(image: TraffiImage, token: string)=> {

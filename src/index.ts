@@ -12,17 +12,23 @@ app.listen(port, ()=>{
 })
 
 const test = async () : Promise<void> => {
-    const start = Date.now()
-    await updateCarParkAvailbilityLTA()
-    const timeTaken  = Date.now() - start
-    console.log(`timetaken for the operation: ${timeTaken} milliseconds`)
-
-    setInterval(async()=>{
+    try {
         const start = Date.now()
         await updateCarParkAvailbilityLTA()
         const timeTaken  = Date.now() - start
         console.log(`timetaken for the operation: ${timeTaken} milliseconds`)
-    }, 1000*60)
+    
+        setInterval(async()=>{
+            const start = Date.now()
+            await updateCarParkAvailbilityLTA()
+            const timeTaken  = Date.now() - start
+            console.log(`timetaken for the operation: ${timeTaken} milliseconds`)
+        }, 1000*60)
+
+    }catch(e) {
+        console.log(e)
+    }
+
 
 }
 test()
