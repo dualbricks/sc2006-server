@@ -26,7 +26,7 @@ const getCarParkAvailbilityLTA = async (query?:string): Promise<void|carParkInfo
     const queryList: number[] = [0,500,1000,1500,2000];
     let config: AxiosRequestHeaders = {
         accept: 'application/json',
-        AccountKey: process.env.API_KEY
+        AccountKey: encodeURI(process.env.API_KEY)
     }
     let carParkList : carParkListLTA = {value: []};
     
