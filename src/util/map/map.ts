@@ -18,7 +18,11 @@ export const getAPIKey = async(email: String, password: String): Promise<String|
         'cache-control': 'no-cache, max-age=0',
     }
     let url = `https://developers.onemap.sg/privateapi/auth/post/getToken`
-    const {data, status} = await axios.post(url, {Headers: config, email: email, password:password});
-    const APIKey = data.access_token;
-    return APIKey;
+    try {
+        const {data, status} = await axios.post(url, {Headers: config, email: email, password:password});
+        const APIKey = data.access_token;
+        return APIKey;
+    } catch(e) {
+        return ''
+    }
 }
