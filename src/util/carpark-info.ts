@@ -2,7 +2,22 @@ import axios,{AxiosRequestHeaders} from 'axios';
 import { Types } from 'mongoose';
 import { carParkInfoLTA, carParkListLTA, dbGeolocationType, carParkObject, lotType } from '../interfaces';
 import { CarPark } from '../db/models/car';
+import * as schedule from 'node-schedule'
 
+
+const CarParkAvailabilityScheduler = async (): Promise<void>=> {
+    var rule = new schedule.RecurrenceRule();
+    
+    rule.minute = [new schedule.Range(0,59, 1)];
+
+    schedule.scheduleJob(rule, async ()=> {
+        try{
+            await updateCarParkAvailbilityLTA();
+        }catch(e) {
+            console.log(e);
+        }
+    })
+} 
 //Function to update Carpark Availbility
 const updateCarParkAvailbilityLTA = async(): Promise<void> => {
     try{
@@ -74,7 +89,7 @@ const convertStringToGeolocation = (s: string) : number[] => {
     var str_split :  number[] = s.split(" ").map(Number)
     return str_split.reverse()
 }
-const mergeCarParkInfo = (data: carParkInfoLTA[]) : carParkInfoLTA[] =>{
+export const mergeCarParkInfo = (data: carParkInfoLTA[]) : carParkInfoLTA[] =>{
     type lot = lotType[]
     //data.sort((a,b)=>compareString(a,b));
     let carParkObj : carParkObject = {}
@@ -139,6 +154,8 @@ const compareString = (a:carParkInfoLTA,b:carParkInfoLTA) => {
 export {
     //updateCarParkAvailbility,
     getCarParkAvailbilityLTA,
-    updateCarParkAvailbilityLTA
+    updateCarParkAvailbilityLTA,
+    CarParkAvailabilityScheduler
+
 }
 
