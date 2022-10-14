@@ -1,5 +1,5 @@
 import express, {Express, Request, Response} from 'express';
-import { carParkRouter, userRouter } from "./routers";
+import  {carParkRouter, userRouter, logRouter}  from "./routers";
 import bodyParser from 'body-parser';
 
 
@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.json())
 app.use(carParkRouter);
 app.use(userRouter);
+app.use(logRouter);
 
 
 app.get('/', (req: Request, res: Response) => {

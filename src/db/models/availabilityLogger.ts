@@ -1,6 +1,7 @@
 import mongoose, {Schema, model, Types} from "mongoose";
 import validator from 'validator';
 import { AvailabilityLog } from "../../interfaces";
+import { Logger } from "../Logger";
 
 const availabilityLogSchema : Schema<AvailabilityLog> = new mongoose.Schema<AvailabilityLog>({
     CarParkID: {
@@ -26,6 +27,6 @@ const availabilityLogSchema : Schema<AvailabilityLog> = new mongoose.Schema<Avai
 
 })
 
-const AvailabilityLogdb = mongoose.model("AvailabilityLog", availabilityLogSchema)
+const AvailabilityLogdb = Logger.model("AvailabilityLog", availabilityLogSchema)
 
 export {AvailabilityLogdb}

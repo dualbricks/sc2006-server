@@ -9,6 +9,7 @@ declare global {
         MONGODB_PW: string;
         MAP_EMAIL: string;
         MAP_PASSWORD: string;
+        DB_PW: string;
       }
     }
   }
