@@ -36,12 +36,23 @@ const userSchema : Schema<IUser, UserModel, IUserMethods> = new Schema<IUser, Us
         }
     }],
     savedList: [String],
+    totalCost: {
+        type: Number,
+        default: 0,
+    },
     avatar: {
         type: Buffer
     }
 }, {
     timestamps:true
 })
+
+// schema Virtuals
+userSchema.virtual('expenditure', {
+    ref: 'expenditure',
+    localField: '_id',
+    foreignField: 'owner'
+});
 // User methods 
 
 // method for generating auth tokens for a user 

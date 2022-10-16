@@ -33,8 +33,8 @@ app.listen(port, ()=>{
 
 // }
 
-//updateCarParkAvailbilityLTA();
+updateCarParkAvailbilityLTA();
 // DO NOT RUN THIS FOR THE MOMENT.
 //UploadNewAvailbilityLogScheduler();
 
-//trafficImageScheduler();
+trafficImageScheduler();

@@ -8,7 +8,8 @@ export interface IUser {
     password: string,
     tokens: token[],
     savedList?: String[],
-    avatar?: Buffer
+    avatar?: Buffer,
+    totalCost?: number,
 }
 
 export interface IUserMethods {
