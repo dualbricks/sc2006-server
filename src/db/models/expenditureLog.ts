@@ -20,7 +20,7 @@ const expenditureLogSchema : Schema<expenditureRecord> = new mongoose.Schema<exp
         required: true,
     },
     owner: {
-        type: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User",
     },

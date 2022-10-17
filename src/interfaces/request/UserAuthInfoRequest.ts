@@ -7,7 +7,7 @@ import { expenditureRecord } from "../db/expenditureRecord";
 export interface UserAuthInfoRequest extends Request {
     user?: Document<unknown, any, IUser> & IUser & {
         _id: Types.ObjectId;
-        expenditure: PopulatedDoc<Document<unknown, any, expenditureRecord> & expenditureRecord & { _id: ObjectId; }>;
+        expenditure?: PopulatedDoc<Document<unknown, any, expenditureRecord> & expenditureRecord & { _id: ObjectId; }>;
     } & IUserMethods;
     token?: String;
 }

@@ -1,14 +1,14 @@
 import express, { Express, Request, Response } from "express";
 import { ExpenditureLog } from "../db/models/expenditureLog";
-import { expenditureRecord } from "../interfaces/db/expenditureRecord";
+import { User } from "../db/models/user";
 import { UserAuthInfoRequest } from "../interfaces/request/UserAuthInfoRequest";
 import {authToken as auth} from "../middleware/auth";
+
+
 const expenditureRouter = express.Router();
-
-expenditureRouter.post('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>{
-    
+expenditureRouter.post('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>{ 
+    console.log("requested");
     if(!req.user) return res.status(401).send("Unauthorized");
-
     const expenditure = new ExpenditureLog({
         carParkID: req.body.carParkID,
         startTime: req.body.startTime,
@@ -40,12 +40,14 @@ expenditureRouter.get('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>
         const parts : string[] = req.query.sortBy.toString().split(':');
         sort[parts[0] as keyof sortQuery ] = parts[1] === 'desc' ? -1 : 1;
     }
+    console.log(sort);
 
     try{
         const user = req.user;
+
         if(req.query.limit && req.query.skip){
-            await req.user.populate({path: 'expenditure', options: {limit: parseInt(req.query.limit as string), skip: parseInt(req.query.skip as string), sort}});
-            res.send(req.user.expenditure);
+            await user.populate({path: 'expenditure', options: { limit: parseInt(req.query.limit as string), skip: parseInt(req.query.skip as string), sort}});
+            res.send(user.expenditure);
         }
     }catch(e){
         res.status(500).send(e);
@@ -54,6 +56,7 @@ expenditureRouter.get('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>
 })
 // TO BE FIXED
 // patch expenditure logs
+
 expenditureRouter.patch('/e/:id',auth, async (req:UserAuthInfoRequest, res:Response)=>{
     if(!req.user) return res.status(401).send("Unauthorized");
     const updates = Object.keys(req.body);
@@ -63,9 +66,11 @@ expenditureRouter.patch('/e/:id',auth, async (req:UserAuthInfoRequest, res:Respo
     try{
         const expenditure = await ExpenditureLog.findOne({_id: req.params.id, owner: req.user._id}) ;
         if(!expenditure) return res.status(404).send();
-        updates.forEach((update)=> expenditure[update as keyof ] = req.body[update]);
+        // @ts-ignore 
+        updates.forEach((update)=> expenditure[update] = req.body[update]);
         await expenditure.save();
         res.send(expenditure);
+
     }catch(e){
         res.status(400).send(e);
     }
@@ -81,7 +86,7 @@ expenditureRouter.delete('/e/:id',auth, async (req:UserAuthInfoRequest, res:Resp
     }catch(e){
         res.status(500).send(e);
     }
-}
+})
 
 export {expenditureRouter}
 

@@ -1,5 +1,5 @@
 import express, {Express, Request, Response} from 'express';
-import  {carParkRouter, userRouter, logRouter}  from "./routers";
+import  {carParkRouter, userRouter, logRouter, expenditureRouter}  from "./routers";
 import bodyParser from 'body-parser';
 
 
@@ -11,6 +11,7 @@ app.use(express.json())
 app.use(carParkRouter);
 app.use(userRouter);
 app.use(logRouter);
+app.use(expenditureRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
