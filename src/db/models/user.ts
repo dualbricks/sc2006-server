@@ -35,7 +35,10 @@ const userSchema : Schema<IUser, UserModel, IUserMethods> = new Schema<IUser, Us
             required: true
         }
     }],
-    savedList: [String],
+    savedList: {
+        type: [String],
+        default: [],
+    },
     totalCost: {
         type: Number,
         default: 0,

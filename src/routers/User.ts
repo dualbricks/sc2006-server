@@ -72,4 +72,19 @@ userRouter.get('/users/me', auth, async(req: UserAuthInfoRequest, res)=>{
     res.send({user: req.user, token: req.token});
 })
 
+// post saved list to user data 
+userRouter.post('/users/me/save', auth, async (req: UserAuthInfoRequest, res)=>{ 
+    if(!req.user) return res.status(401).send("Unauthorized");
+    try{
+        const user = req.user;
+        const carParkID = req.body.carParkID;
+        user.savedList = user.savedList.concat(carParkID);
+        console.log(user.savedList);
+        await user.save();
+        res.status(201).send(user);
+    }catch(e){
+        res.status(400).send(e);
+    }
+})
+
 export{ userRouter};

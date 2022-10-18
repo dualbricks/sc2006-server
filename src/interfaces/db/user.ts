@@ -7,7 +7,7 @@ export interface IUser {
     email: string,
     password: string,
     tokens: token[],
-    savedList?: String[],
+    savedList: String[],
     avatar?: Buffer,
     totalCost?: number,
 }

@@ -55,3 +55,31 @@ import * as schedule  from 'node-schedule'
 
 
  }
+
+ export const AvailabilityPredictor = (data: AvailabilityLog[])=> {
+    let availabilityArr = {
+        C: 0,
+        Y: 0,
+        H: 0,
+    }
+    let count = 0;
+    data.forEach((item: AvailabilityLog)=> {
+        item.AvailableLots.forEach((lot: lotType)=> {
+            if(lot.lotType === 'C') {
+                availabilityArr.C += lot.AvailableLots;
+            }
+            else if(lot.lotType === 'Y') {
+                availabilityArr.Y += lot.AvailableLots;
+            }
+            else if(lot.lotType === 'H') {
+                availabilityArr.H += lot.AvailableLots;
+            }
+        })
+        count++;
+    })
+
+    availabilityArr.C = Math.floor(availabilityArr.C/count);
+    availabilityArr.Y = Math.floor(availabilityArr.Y/count);
+    availabilityArr.H = Math.floor(availabilityArr.H/count);
+    return availabilityArr;
+ }

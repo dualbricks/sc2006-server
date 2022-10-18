@@ -3,8 +3,14 @@ import { CarPark } from "../../db/models/car";
 import axios, {} from "axios";
 
 export const fetchNearByCarParks = async (latt : number, long: number )=> {
-    const data = await CarPark.find({Location: {$nearSphere: {$geometry: {type: "Point",coordinates:[long, latt]}, $maxDistance:2000}}})
-    return data
+    try {
+        const data = await CarPark.find({Location: {$nearSphere: {$geometry: {type: "Point",coordinates:[long, latt]}, $maxDistance:2000}}})
+        return data
+       
+    }catch(e) {
+        throw new Error("Not available at the moment.");
+    }
+    
 }
 
 export const fetchCarParks = async() =>{
@@ -12,7 +18,7 @@ export const fetchCarParks = async() =>{
         const data = await CarPark.find();
         return data;
     }catch(e) {
-        console.log('Error');
+        throw new Error("Not available at the moment.");
     }
 
 }
