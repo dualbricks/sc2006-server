@@ -9,8 +9,13 @@ const carParkRouter = express.Router();
 carParkRouter.get('/carparks/:latt-:long',async (req:Request, res:Response)=>{
     const latt : number  = Number(req.params.latt)
     const long : number = Number(req.params.long)
-    const data = await fetchNearByCarParks(latt,long)
-    res.send(data);
+    try{
+        const data = await fetchNearByCarParks(latt,long)
+        res.send(data);
+    }catch(e) {
+        res.status(400).send(e)
+    }
+   
 })
 
 carParkRouter.get('/carparks/postalcode/:postal',async (req:Request, res:Response)=>{

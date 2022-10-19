@@ -24,6 +24,7 @@ export const getGeolocation = async (query:string): Promise<geoLocation|void> =>
 
 }
 
+
 export const getAPIKey = async(email: String, password: String): Promise<String| void> => {
 
     let config : AxiosRequestHeaders = {
@@ -34,7 +35,8 @@ export const getAPIKey = async(email: String, password: String): Promise<String|
     try {
         const {data, status} = await axios.post(url, {Headers: config, email: email, password:password});
         const APIKey = data.access_token;
-        return APIKey;
+        console.log(APIKey);
+        process.env['API_MAP_KEY'] = APIKey;
     } catch(e) {
         return ''
     }

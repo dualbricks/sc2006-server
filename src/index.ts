@@ -3,7 +3,7 @@ import './db/mongoose';
 import './db/Logger';
 import app from "./app";
 import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
-import { trafficImageScheduler, uploadTrafficImages } from "./controllers/trafficImageController";
+import { APITokenScheduler, trafficImageScheduler, uploadTrafficImages } from "./controllers/trafficImageController";
 import {UploadNewAvailbilityLogScheduler } from "./controllers/availabilityLogger";
 
 const port = process.env.PORT || 3000;
@@ -34,7 +34,6 @@ app.listen(port, ()=>{
 // }
 
 updateCarParkAvailbilityLTA();
-// DO NOT RUN THIS FOR THE MOMENT.
-//UploadNewAvailbilityLogScheduler();
-
+// DO NOT RUN THIS FOR THE MOMENT. IT WILL OVERLOAD THE SERVER
+APITokenScheduler();
 trafficImageScheduler();

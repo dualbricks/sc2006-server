@@ -21,7 +21,21 @@ export const trafficImageScheduler =  async (): Promise<void>=> {
             console.log(e);
         }
     })
-} 
+}
+export const APITokenScheduler = async (): Promise<void> => {
+    var rule = new schedule.RecurrenceRule();
+    rule.dayOfWeek = [new schedule.Range(0,6)];
+    rule.hour = 0;
+    rule.minute = 0;
+    //rule.minute = [new schedule.Range(0,59, 1)];
+    schedule.scheduleJob(rule, async ()=> {
+        try{
+            await getAPIKey(process.env.MAP_EMAIL as string, process.env.MAP_PASSWORD as string);
+        }catch(e) {
+            console.log(e);
+        }
+    })
+}
 export const uploadTrafficImages = async (): Promise<void>=> {
     const data : TraffiImage[] = await requestTrafficImages();
     const updatedData  = await updateNameTrafficImage(data);
@@ -65,9 +79,7 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
         Accept: 'application/json'
     }
     try {
-        let token  = await getAPIKey(process.env.MAP_EMAIL, process.env.MAP_PASSWORD) as string;
-
-
+        let token  = process.env.API_MAP_KEY as string;
         let newList =  await Promise.all(trafficData.map(async (image: TraffiImage)=> {
             const x = await gettingNameAPICall(image, token);
             return x;

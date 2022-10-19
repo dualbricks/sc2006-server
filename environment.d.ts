@@ -10,6 +10,7 @@ declare global {
         MAP_EMAIL: string;
         MAP_PASSWORD: string;
         DB_PW: string;
+        API_MAP_KEy: string;
       }
     }
   }
