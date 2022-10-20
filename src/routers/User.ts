@@ -2,7 +2,7 @@ import express, { Express, Request, Response, Router } from "express";
 import { User } from "../db/models/user";
 import { UserAuthInfoRequest } from "../interfaces/request/UserAuthInfoRequest";
 import { authToken as auth } from "../middleware/auth" ;
-
+import bcrypt from "bcryptjs";
 const userRouter  = express.Router();
 
 //Sign up
@@ -78,8 +78,27 @@ userRouter.post('/users/me/save', auth, async (req: UserAuthInfoRequest, res)=>{
     try{
         const user = req.user;
         const carParkID = req.body.carParkID;
+        if(user.savedList.includes(carParkID)) {
+            return res.status(400).send("Already saved")
+        }
         user.savedList = user.savedList.concat(carParkID);
-        console.log(user.savedList);
+        await user.save();
+        res.status(201).send(user);
+    }catch(e){
+        res.status(400).send(e);
+    }
+})
+
+// Change password for user
+userRouter.patch('/users/me/password', auth, async (req: UserAuthInfoRequest, res)=>{ 
+    if(!req.user) return res.status(401).send("Unauthorized");
+    try{
+        const user = req.user;
+        const match = await bcrypt.compare(req.body.oldPassword, user.password)
+        if(!match) {
+            return res.status(400).send("Incorrect password");
+        }
+        user.password = req.body.password;
         await user.save();
         res.status(201).send(user);
     }catch(e){
