@@ -88,7 +88,22 @@ userRouter.post('/users/me/save', auth, async (req: UserAuthInfoRequest, res)=>{
         res.status(400).send(e);
     }
 })
-
+// post request to remove carpark from saved list
+userRouter.post('/users/me/remove', auth, async (req: UserAuthInfoRequest, res)=>{
+    if(!req.user) return res.status(401).send("Unauthorized");
+    try{
+        const user = req.user;
+        const carParkID = req.body.carParkID;
+        if(!user.savedList.includes(carParkID)) {
+            return res.status(400).send("Not saved")
+        }
+        user.savedList = user.savedList.filter((id)=> id != carParkID);
+        await user.save();
+        res.status(201).send(user);
+    }catch(e){
+        res.status(400).send(e);
+    }
+})
 // Change password for user
 userRouter.patch('/users/me/password', auth, async (req: UserAuthInfoRequest, res)=>{ 
     if(!req.user) return res.status(401).send("Unauthorized");

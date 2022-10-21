@@ -9,6 +9,7 @@ const expenditureRouter = express.Router();
 expenditureRouter.post('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>{ 
     console.log("requested");
     if(!req.user) return res.status(401).send("Unauthorized");
+
     const expenditure = new ExpenditureLog({
         carParkID: req.body.carParkID,
         startTime: req.body.startTime,
@@ -22,6 +23,7 @@ expenditureRouter.post('/e',auth, async (req:UserAuthInfoRequest, res:Response)=
         res.status(201).send(expenditure);
     }catch(e){
         res.status(400).send(e);
+        console.log(e);
     }
 })
 // GET ?Completed
