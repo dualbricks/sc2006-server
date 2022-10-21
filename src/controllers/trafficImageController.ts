@@ -80,14 +80,19 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
     }
     try {
         let token  = process.env.API_MAP_KEY as string;
-        let newList =  await Promise.all(trafficData.map(async (image: TraffiImage)=> {
+        let promiseList =  await Promise.allSettled(trafficData.map(async (image: TraffiImage)=> {
             const x = await gettingNameAPICall(image, token);
             return x;
         }))
-        console.log(newList.length)
+        let newList : TraffiImage[] = promiseList.map((x) => {
+            if (x.status === 'fulfilled')
+                return x.value;
+        }) as unknown as TraffiImage[];
+        console.log(newList.length);
         return newList;
 
     }catch(e) {
+        console.log(e)
         console.log('no key');
     }
  
@@ -96,7 +101,7 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
 const gettingNameAPICall = async(image: TraffiImage, token: string)=> {
     const {Latitude, Longitude} = image
     let url =`https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location=${Latitude},${Longitude}&token=${token}&buffer=20&addressType=ALL`
-        const {data} = await axios.get(url, {headers: config});
+        const {data} = await axios.get(url);
         for(const location of data.GeocodeInfo) {
             if(location.ROAD !== undefined) {
                 image["Name"] = location.ROAD;

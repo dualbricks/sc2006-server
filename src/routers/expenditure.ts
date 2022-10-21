@@ -49,10 +49,18 @@ expenditureRouter.get('/e',auth, async (req:UserAuthInfoRequest, res:Response)=>
 
         if(req.query.limit && req.query.skip){
             await user.populate({path: 'expenditure', options: { limit: parseInt(req.query.limit as string), skip: parseInt(req.query.skip as string), sort}});
-            res.send(user.expenditure);
+            return res.send(user.expenditure);
+        }
+        // get records by year using startTime
+        if(req.query.year) {
+            const year = req.query.year;
+            console.log(year)
+            await user.populate({path: 'expenditure', match: {startTime: {$gte: new Date(`${year}-01-01`), $lt: new Date(`${year}-12-31`)}}});
+            console.log(user.expenditure);
+            return res.send(user.expenditure);
         }
     }catch(e){
-        res.status(500).send(e);
+       return res.status(500).send(e);
     }
 
 })

@@ -38,6 +38,7 @@ export const getAPIKey = async(email: String, password: String): Promise<String|
         console.log(APIKey);
         process.env['API_MAP_KEY'] = APIKey;
     } catch(e) {
+        console.log(e);
         return ''
     }
 }

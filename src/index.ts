@@ -5,6 +5,7 @@ import app from "./app";
 import {updateCarParkAvailbilityLTA } from "./util/carpark-info";
 import { APITokenScheduler, trafficImageScheduler, uploadTrafficImages } from "./controllers/trafficImageController";
 import {UploadNewAvailbilityLogScheduler } from "./controllers/availabilityLogger";
+import { getAPIKey } from './util/map/map';
 
 const port = process.env.PORT || 3000;
 
