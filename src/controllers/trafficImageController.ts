@@ -84,10 +84,10 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
             const x = await gettingNameAPICall(image, token);
             return x;
         }))
-        let newList : TraffiImage[] = promiseList.map((x) => {
-            if (x.status === 'fulfilled')
-                return x.value;
-        }) as unknown as TraffiImage[];
+        let newList : TraffiImage[] = promiseList.filter((x) => {
+            return(x.status === 'fulfilled');
+        }).map((x : PromiseSettledResult<TraffiImage>)=> {if(x.status === 'fulfilled') return x.value}) as unknown as TraffiImage[];
+        
         console.log(newList.length);
         return newList;
 

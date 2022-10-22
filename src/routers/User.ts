@@ -78,6 +78,7 @@ userRouter.post('/users/me/save', auth, async (req: UserAuthInfoRequest, res)=>{
     try{
         const user = req.user;
         const carParkID = req.body.carParkID;
+        console.log(carParkID)
         if(user.savedList.includes(carParkID)) {
             return res.status(400).send("Already saved")
         }
@@ -92,8 +93,10 @@ userRouter.post('/users/me/save', auth, async (req: UserAuthInfoRequest, res)=>{
 userRouter.post('/users/me/remove', auth, async (req: UserAuthInfoRequest, res)=>{
     if(!req.user) return res.status(401).send("Unauthorized");
     try{
+        
         const user = req.user;
         const carParkID = req.body.carParkID;
+        console.log(carParkID)
         if(!user.savedList.includes(carParkID)) {
             return res.status(400).send("Not saved")
         }
