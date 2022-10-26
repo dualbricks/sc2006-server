@@ -11,6 +11,7 @@ declare global {
         MAP_PASSWORD: string;
         DB_PW: string;
         API_MAP_KEY: string;
+        CLIENT_URL: string;
       }
     }
   }
