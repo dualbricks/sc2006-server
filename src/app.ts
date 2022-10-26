@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
+app.set('Access-Control-Allow-Origin', process.env.CLIENT_URL);
 app.use(express.json())
 app.use(carParkRouter);
 app.use(userRouter);
