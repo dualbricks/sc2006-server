@@ -1,15 +1,11 @@
 import axios, {AxiosRequestHeaders} from "axios";
 import { Types } from "mongoose";
 import { TrafficImageList } from "../db/models/trafficImage";
-
+import https from 'https';
 import {geoLocation, TrafficImageData, TraffiImage} from '../interfaces/db'
 import { getAPIKey } from "../util/map/map";
 import * as schedule from 'node-schedule'
 
-let config: AxiosRequestHeaders = {
-    accept: 'application/json',
-    AccountKey: process.env.API_KEY
-}
 
 export const trafficImageScheduler =  async (): Promise<void>=> {
     var rule = new schedule.RecurrenceRule();
@@ -80,9 +76,10 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
     }
     try {
         let token  = process.env.API_MAP_KEY as string;
+        console.log(token);
         let promiseList =  await Promise.allSettled(trafficData.map(async (image: TraffiImage)=> {
-            const x = await gettingNameAPICall(image, token);
-            return x;
+                const x = await gettingNameAPICall(image, token);
+                return x; 
         }))
         let newList : TraffiImage[] = promiseList.filter((x) => {
             return(x.status === 'fulfilled');
@@ -99,9 +96,12 @@ const updateNameTrafficImage =  async (trafficData: TraffiImage[]): Promise<Traf
 }
 
 const gettingNameAPICall = async(image: TraffiImage, token: string)=> {
-    const {Latitude, Longitude} = image
-    let url =`https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location=${Latitude},${Longitude}&token=${token}&buffer=20&addressType=ALL`
-        const {data} = await axios.get(url);
+    const {Latitude, Longitude} = image;
+    const options = {
+        httpsAgent: new https.Agent({ keepAlive: true })
+    }
+    let url =`https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location=${Latitude},${Longitude}&token=${encodeURIComponent(token)}&buffer=20&addressType=ALL`
+        const {data} = await axios.get(url,options);
         for(const location of data.GeocodeInfo) {
             if(location.ROAD !== undefined) {
                 image["Name"] = location.ROAD;

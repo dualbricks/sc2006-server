@@ -22,7 +22,7 @@ trafficImageRouter.get('/trafficimages/:latt-:long', async (req:Request, res:Res
     try {
         const latt : number  = Number(req.params.latt)
         const long : number = Number(req.params.long)
-        const data = await TrafficImageList.find({Location: {$near: {$geometry: {type: "Point", coordinates: [long, latt]}, $maxDistance: 1000}}});
+        const data = await TrafficImageList.find({Location: {$near: {$geometry: {type: "Point", coordinates: [long, latt]}, $maxDistance: 5000}}});
         res.send(data);
     }catch(e) {
         console.log(e)
@@ -35,7 +35,7 @@ trafficImageRouter.get('/trafficimages/p/:postalCode', async (req:Request, res:R
     try {
         const postalCode = req.params.postalCode;
         const location = await getGeolocation(postalCode) as geoLocation;
-        const data = await TrafficImageList.find({Location: {$near: {$geometry: {type: "Point", coordinates: [location.long, location.latt]}, $maxDistance: 1000}}});
+        const data = await TrafficImageList.find({Location: {$near: {$geometry: {type: "Point", coordinates: [location.long, location.latt]}, $maxDistance: 5000}}});
         res.send(data);
     }catch(e) {
         console.log(e)
