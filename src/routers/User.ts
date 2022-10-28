@@ -113,7 +113,8 @@ userRouter.patch('/users/me/password', auth, async (req: UserAuthInfoRequest, re
     try{
         const user = req.user;
         const match = await bcrypt.compare(req.body.oldPassword, user.password)
-        if(user.password === req.body.password) {
+        const samePassword = await bcrypt.compare(req.body.password, user.password)
+        if(samePassword) {
             return res.status(400).send("New password cannot be the same as old password")
         }
         if(!match) {
