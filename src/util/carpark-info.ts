@@ -5,7 +5,7 @@ import { CarPark } from '../db/models/car';
 import * as schedule from 'node-schedule'
 
 
-const CarParkAvailabilityScheduler = async (): Promise<void>=> {
+ const CarParkAvailabilityScheduler = async (): Promise<void>=> {
     var rule = new schedule.RecurrenceRule();
     
     rule.minute = [new schedule.Range(0,59, 1)];
